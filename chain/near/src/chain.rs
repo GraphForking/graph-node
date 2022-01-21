@@ -169,7 +169,7 @@ impl Blockchain for Chain {
         };
 
         firehose_endpoint
-            .irreversible_block_ptr_for_number::<codec::HeaderOnlyBlock>(logger, number)
+            .block_ptr_for_number::<codec::HeaderOnlyBlock>(logger, number)
             .map_err(Into::into)
             .await
     }
@@ -341,7 +341,7 @@ impl FirehoseMapperTrait<Chain> for FirehoseMapper {
         let final_block_number = block.header().last_final_block_height as BlockNumber;
 
         self.endpoint
-            .irreversible_block_ptr_for_number::<codec::HeaderOnlyBlock>(logger, final_block_number)
+            .block_ptr_for_number::<codec::HeaderOnlyBlock>(logger, final_block_number)
             .await
     }
 }
