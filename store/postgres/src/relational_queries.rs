@@ -2840,7 +2840,8 @@ impl<'a> QueryFragment<Pg> for CopyEntityBatchQuery<'a> {
             out.push_identifier(column.name.as_str())?;
             out.push_sql(", ");
         }
-        out.push_sql("block_range)");
+        out.push_sql(BLOCK_RANGE_COLUMN);
+        out.push_sql(")");
         out.push_sql("\nselect ");
         for column in &self.columns {
             out.push_identifier(column.name.as_str())?;
@@ -2857,7 +2858,8 @@ impl<'a> QueryFragment<Pg> for CopyEntityBatchQuery<'a> {
             }
             out.push_sql(", ");
         }
-        out.push_sql("block_range from ");
+        out.push_sql(BLOCK_RANGE_COLUMN);
+        out.push_sql(" from ");
         out.push_sql(self.src.qualified_name.as_str());
         out.push_sql(" where vid >= ");
         out.push_bind_param::<BigInt, _>(&self.first_vid)?;
@@ -2945,7 +2947,7 @@ fn iter_column_names<'a, 'b>(
     include_block_range_column: bool,
 ) -> impl Iterator<Item = &'b str> {
     let extra = if include_block_range_column {
-        ["block_range"].iter()
+        [BLOCK_RANGE_COLUMN].iter()
     } else {
         [].iter()
     }
