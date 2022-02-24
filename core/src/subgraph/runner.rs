@@ -534,7 +534,8 @@ where
 
         // If new data sources have been created, restart the subgraph after this block.
         // This is necessary to re-create the block stream.
-        let needs_restart = block_state.has_created_data_sources();
+        // let needs_restart = block_state.has_created_data_sources();
+        let needs_restart = false;
         let host_metrics = self.ctx.host_metrics.clone();
 
         // This loop will:

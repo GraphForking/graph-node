@@ -5,9 +5,9 @@ use crate::subgraph::metrics::{SubgraphInstanceManagerMetrics, SubgraphInstanceM
 use crate::subgraph::runner::SubgraphRunner;
 use crate::subgraph::SubgraphInstance;
 use graph::blockchain::block_stream::BlockStreamMetrics;
-use graph::blockchain::BlockchainKind;
+use graph::blockchain::Blockchain;
 use graph::blockchain::NodeCapabilities;
-use graph::blockchain::{Blockchain, TriggerFilter as _};
+use graph::blockchain::{BlockchainKind, TriggerFilter};
 use graph::data::subgraph::MAX_SPEC_VERSION;
 use graph::prelude::{SubgraphInstanceManager as SubgraphInstanceManagerTrait, *};
 use graph::util::lfu_cache::LfuCache;
@@ -197,7 +197,10 @@ where
             .clone();
 
         // Obtain filters from the manifest
-        let filter = C::TriggerFilter::from_data_sources(manifest.data_sources.iter());
+        let mut filter = C::TriggerFilter::from_data_sources(manifest.data_sources.iter());
+
+        filter.extend_with_template(manifest.templates.clone().into_iter());
+
         let start_blocks = manifest.start_blocks();
 
         let templates = Arc::new(manifest.templates.clone());
